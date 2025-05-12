@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Validator as ValidationValidator;
+// use Illuminate\Validation\Validator as ValidationValidator;
 
 class userController extends Controller
 {
@@ -48,42 +48,61 @@ class userController extends Controller
 
 
     public function login(Request $request) {
-        try {
+       
+          $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8'
+        ]);
 
-            // $credentials = $request->validate([
-            //     'email' => 'required|email',
-            //     'password' => 'required'
-            // ]);
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email',
-                'password' => 'required'
-            ]);
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            return response()->json([
+                'user' => $user,
+                'message' => 'login successfully'
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Invalid Credentials',
+        ], 400);
+    }
+        // try {
+
+        //     $credentials = $request->validate([
+        //         'email' => 'required|email',
+        //         'password' => 'required'
+        //     ]);
+        //     $validator = Validator::make($request->all(), [
+        //         'email' => 'required|email',
+        //         'password' => 'required'
+        //     ]);
             
-            if($validator->fails()) {
-                return response()->json([
-                    'message' => 'Validation Fails',
-                    'errors' => $validator->errors(),
-                ], 400);
-            };
+        //     if($validator->fails()) {
+        //         return response()->json([
+        //             'message' => 'Validation Fails',
+        //             'errors' => $validator->errors(),
+        //         ], 400);
+        //     };
 
-            if (Auth::attempt($validator)) {
-                $user = Auth::user();
+        //     if (Auth::attempt($credentials)) {
+        //         $user = Auth::user();
 
-                return response()->json([
-                    'message' => 'login successfully',
-                    'user' => $user
-                ], 200);
-            }
+        //         return response()->json([
+        //             'message' => 'login successfully',
+        //             'user' => $user
+        //         ], 200);
+        //     }
     
             // return response()->json([
             //     'message' => 'Invalid Credentials',
             //     'error' => $credentials
             // ], 400);
-        } catch(\Exception $error) {
-            return response()->json([
-                'message' => 'Error occured' . $error,
-                'error' => $error,
-            ], 500);
-        }
-    }
+        // } catch(\Exception $error) {
+        //     return response()->json([
+        //         'message' => 'Error occured' . $error,
+        //         'error' => $error,
+        //     ], 500);
+        // }
+    
 }
