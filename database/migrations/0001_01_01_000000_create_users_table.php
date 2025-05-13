@@ -22,6 +22,8 @@ return new class extends Migration
             ->default('male');
             $table->enum('role', ['user', 'vendor', 'admin'])
             ->default('user');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('verification_code')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
