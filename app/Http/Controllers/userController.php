@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Node\Expr\New_;
 
 // use Illuminate\Validation\Validator as ValidationValidator;
 
@@ -46,12 +45,12 @@ class userController extends Controller
             $user->password = $request->password;
             $user->save();
 
-            Mail::to($user->email)->send(new
+            Mail::to($user->email)->send( new
                 \App\Mail\userEmailVerification($user));
             return response()->json([
                 'user' => $user,
                 'message' => 'Registered Successfully',
-                'message' => `A verification code has been sent to $user->email please verify`,
+                // 'message' => `A verification code has been sent to $user->email please verify`,
             ], 201);
         } catch (\Exception $error) {
             return response()->json([
