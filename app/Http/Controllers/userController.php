@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +34,7 @@ class userController extends Controller
             ], 400);
         }
         try {
-            $verification_code = rand(100000, 999999);
+            $verification_code = rand(100000,999999);
             $user = new User;
             $user->firstname = $request->firstname;
             $user->lastname = $request->lastname;
@@ -43,22 +43,23 @@ class userController extends Controller
             $user->gender = $request->gender;
             $user->role = $request->role;
             $user->password = $request->password;
+            $user->verification_code = $verification_code;
             $user->save();
 
-            Mail::to($user->email)->send( new
-                \App\Mail\userEmailVerification($user));
+            Mail::to($user->email)->send( new \App\Mail\userEmailVerification($user));
             return response()->json([
                 'user' => $user,
-                'message' => 'Registered Successfully',
-                // 'message' => `A verification code has been sent to $user->email please verify`,
-            ], 201);
+                'message' => 'Registered Successfully'
+            ],201);
+
         } catch (\Exception $error) {
             return response()->json([
-                'message' => 'registration failed',
+                'message' => "Registration Failed",
                 'errors' => $error,
-            ], 500);
+            ],500);
         }
     }
+
 
     public function verify(Request $request)
     {
@@ -110,15 +111,17 @@ class userController extends Controller
 
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:8'
+            'password' => 'required'
         ]);
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            $token = $user->createToken('login-token')->plainTextToken;
 
             return response()->json([
+                'message' => 'login successfully',
                 'user' => $user,
-                'message' => 'login successfully'
+                'token' => $token,
             ], 200);
         }
 
@@ -126,42 +129,5 @@ class userController extends Controller
             'message' => 'Invalid Credentials',
         ], 400);
     }
-    // try {
-
-    //     $credentials = $request->validate([
-    //         'email' => 'required|email',
-    //         'password' => 'required'
-    //     ]);
-    //     $validator = Validator::make($request->all(), [
-    //         'email' => 'required|email',
-    //         'password' => 'required'
-    //     ]);
-
-    //     if($validator->fails()) {
-    //         return response()->json([
-    //             'message' => 'Validation Fails',
-    //             'errors' => $validator->errors(),
-    //         ], 400);
-    //     };
-
-    //     if (Auth::attempt($credentials)) {
-    //         $user = Auth::user();
-
-    //         return response()->json([
-    //             'message' => 'login successfully',
-    //             'user' => $user
-    //         ], 200);
-    //     }
-
-    // return response()->json([
-    //     'message' => 'Invalid Credentials',
-    //     'error' => $credentials
-    // ], 400);
-    // } catch(\Exception $error) {
-    //     return response()->json([
-    //         'message' => 'Error occured' . $error,
-    //         'error' => $error,
-    //     ], 500);
-    // }
 
 }
