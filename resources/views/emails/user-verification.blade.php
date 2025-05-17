@@ -6,8 +6,8 @@
     <title>User Email Verification</title>
 </head>
 <body>
-    <h1>Hello {{$user->name }}</h1>
-    <h3>This is your verification code</h3>
+    <h1>Hello {{ $user->name }}</h1>
+    <h3>This is your verification code:</h3>
     <p>{{ $user->verification_code }}</p>
 </body>
 </html>

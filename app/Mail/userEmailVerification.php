@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class userEmailVerification extends Mailable
+class UserEmailVerification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,6 +18,7 @@ class userEmailVerification extends Mailable
 
     /**
      * Create a new message instance.
+     * @return void
      */
     public function __construct(User $user)
     {
@@ -43,12 +44,12 @@ class userEmailVerification extends Mailable
     /**
      * Get the message content definition.
      */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
+    // public function content(): Content
+    // {
+    //     return new Content(
+    //         view: 'view.name',
+    //     );
+    // }
 
     /**
      * Get the attachments for the message.

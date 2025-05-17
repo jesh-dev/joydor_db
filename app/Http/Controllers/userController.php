@@ -46,11 +46,12 @@ class userController extends Controller
             $user->verification_code = $verification_code;
             $user->save();
 
-            Mail::to($user->email)->send( new \App\Mail\userEmailVerification($user));
+            Mail::to($user->email)->send( new \App\Mail\UserEmailVerification($user));
+
             return response()->json([
                 'user' => $user,
                 'message' => 'Registered Successfully'
-            ],201);
+            ], 201);
 
         } catch (\Exception $error) {
             return response()->json([
