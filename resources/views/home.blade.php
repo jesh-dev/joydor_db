@@ -6,7 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <x-Navbar/>
-    <x-landingPage/>
+    <!-- <x-Navbar/> -->
+    <!-- <x-landingPage/> -->
+    <x-verification_design/>
     
    
