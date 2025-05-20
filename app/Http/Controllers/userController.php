@@ -47,10 +47,9 @@ class userController extends Controller
             $user->save();
 
             Mail::to($user->email)->send( new \App\Mail\UserEmailVerification($user));
-
             return response()->json([
                 'user' => $user,
-                'message' => 'Registered Successfully'
+                'message' => 'Registered Successfully please verify your account'
             ], 201);
 
         } catch (\Exception $error) {
