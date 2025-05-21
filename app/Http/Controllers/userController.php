@@ -48,12 +48,14 @@ class userController extends Controller
 
             Mail::to($user->email)->send( new \App\Mail\UserEmailVerification($user));
             return response()->json([
+                'success' => true,
                 'user' => $user,
-                'message' => 'Registered Successfully please verify your account'
+                'message' => 'Registered Successfully. Please verify your account'
             ], 201);
 
         } catch (\Exception $error) {
             return response()->json([
+                'success' => false,
                 'message' => "Registration Failed",
                 'errors' => $error,
             ],500);
@@ -116,9 +118,10 @@ class userController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('login-token')->plainTextToken;
+            $token = $user->createToken('authtoken')->plainTextToken;
 
             return response()->json([
+                'success' => true,
                 'message' => 'login successfully',
                 'user' => $user,
                 'token' => $token,
@@ -126,6 +129,7 @@ class userController extends Controller
         }
 
         return response()->json([
+            'Success' => false,
             'message' => 'Invalid Credentials',
         ], 400);
     }
