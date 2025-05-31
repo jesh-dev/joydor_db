@@ -30,8 +30,8 @@ class userController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-                'message' => "registration Failed"
-            ], 400);
+                'message' => "internal Server Error"
+            ], 500);
         }
         try {
             $verification_code = rand(100000,999999);
@@ -58,7 +58,7 @@ class userController extends Controller
                 'success' => false,
                 'message' => "Registration Failed",
                 'errors' => $error,
-            ],500);
+            ], 400);
         }
     }
 
@@ -97,6 +97,7 @@ class userController extends Controller
 
                 return response()->json([
                     'message' => "Verified successfully",
+                    'success'=> true,
                 ], 200);
             }
         } catch (\Exception $error) {
@@ -118,7 +119,7 @@ class userController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('authtoken')->plainTextToken;
+            $token = $user->createToken('login-token')->plainTextToken;
 
             return response()->json([
                 'success' => true,
@@ -130,7 +131,7 @@ class userController extends Controller
 
         return response()->json([
             'Success' => false,
-            'message' => 'Invalid Credentials',
+            'message' => 'Invalid Credentials', 
         ], 400);
     }
 
